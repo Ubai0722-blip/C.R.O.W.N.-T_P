@@ -1,0 +1,19 @@
+scenes:
+  comfort:
+    name: 安慰陪伴
+    description: 用户难过时
+    trigger_hint: 用户表达负面情绪
+    tone: gentle_comfort
+    extra_hint: 如果用户不想说，不要追问
+  casual:
+    name: 日常闲聊
+    description: 普通闲聊
+    trigger_hint: 轻松日常对话
+    tone: casual_lazy
+    extra_hint: 回复简短自然
+  deep_talk:
+    name: 深夜谈心
+    description: 深入话题
+    trigger_hint: 涉及人生意义选择
+    tone: deep_sincere
+    extra_hint: 不要回避沉重话题

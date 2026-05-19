@@ -1,0 +1,46 @@
+active_audio_group: default
+default_persona: Priestess
+llm:
+  api_base: https://api.openai.com/v1
+  api_key: ""
+  light_model: gpt-4o-mini
+  max_tokens: 512
+  model: gpt-4o-mini
+  temperature: 1.0
+  timeout: 60
+modules:
+  emotion:
+    enabled: true
+  life_system:
+    enabled: true
+  psychology:
+    shared: true
+persona_bindings:
+  scene_group: default
+  tone_group: default
+proactive:
+  boot_cooldown_minutes: 5
+  care_trigger_chance: 0.8
+  interval_hours: 0.5
+  mutter_enabled: true
+  mutter_max_per_slot: 3
+  quiet_hours_end: 0
+  quiet_hours_start: 23
+search:
+  api_key: ""
+  max_results: 3
+tts:
+  api_base: https://api.openai.com/v1
+  api_key: ""
+  enabled: false
+  model: gpt-4o-mini-tts
+  reference_audio: ""
+vlm:
+  api_base: https://api.openai.com/v1
+  api_key: ""
+  max_tokens: 512
+  model: gpt-4o-mini
+  temperature: 0.3
+  timeout: 30
+active_tone_group: default
+active_scene_group: default

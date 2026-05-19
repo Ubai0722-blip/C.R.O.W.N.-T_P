@@ -1,0 +1,7 @@
+name: study_guard
+version: "1.0.0"
+description: "督学插件 - 监督用户学习"
+author: "官方"
+enabled: true
+triggers: []
+priority: 5
