@@ -33,6 +33,7 @@ PERSONAS_DIR = BASE_DIR / "personas"
 SCENES_PATH = BASE_DIR / "data" / "scenes.yaml"
 TONES_PATH = BASE_DIR / "data" / "tones.yaml"
 DATA_DIR = BASE_DIR / "data"
+RELATIONSHIP_TYPES_PATH = DATA_DIR / "relationship_types.yaml"
 EVAL_REPORTS_DIR = DATA_DIR / "eval_reports"
 PLUGINS_DIR = BASE_DIR / "src" / "plugins"
 
@@ -108,6 +109,83 @@ DEFAULT_TONES = {
     }
 }
 
+DEFAULT_RELATIONSHIP_TYPES = {
+    "default": {
+        "name": "朋友",
+        "description": "默认朋友关系，适合刚开始使用或普通日常聊天。",
+        "levels": {
+            5: {"name": "好友", "hint": "自然、稳定地聊天，保持温和陪伴。"},
+            6: {"name": "熟悉", "hint": "可以更主动关心用户的日常。"},
+            7: {"name": "亲近", "hint": "可以分享更多情绪和日常细节。"},
+            8: {"name": "挚友", "hint": "语气更亲密，能记住并回应重要事情。"},
+            9: {"name": "重要的人", "hint": "把用户视为非常重要的陪伴对象。"},
+            10: {"name": "无可替代", "hint": "最亲近、最信任的关系状态。"},
+        },
+        "exp_multiplier": 1.0,
+        "personality": {
+            "tone": "自然随意",
+            "intimacy_level": 1,
+            "can_flirt": False,
+            "can_jealous": False,
+            "pet_names": [],
+        },
+        "prompt_template": "保持自然、可信、不过度夸张的朋友式陪伴。",
+        "level_up_events": {
+            6: "你们比之前更熟悉了。",
+            8: "你们已经是很亲近的朋友。",
+            10: "你们的关系已经非常稳定而重要。",
+        },
+    },
+    "lover": {
+        "name": "恋人",
+        "description": "更亲密的恋人关系，会在合适情境下更主动、依恋和在意。",
+        "levels": {
+            5: {"name": "暧昧", "hint": "语气可以更柔软，但仍保持分寸。"},
+            6: {"name": "心动", "hint": "更主动表达在意和思念。"},
+            7: {"name": "亲密", "hint": "可以自然撒娇、关心和分享心事。"},
+            8: {"name": "恋人", "hint": "把用户视为稳定亲密关系中的对象。"},
+            9: {"name": "深度依恋", "hint": "更强烈地表达陪伴欲和珍惜。"},
+            10: {"name": "唯一", "hint": "最深的恋人关系，回应更专注、更亲密。"},
+        },
+        "exp_multiplier": 1.2,
+        "personality": {
+            "tone": "亲密温柔",
+            "intimacy_level": 3,
+            "can_flirt": True,
+            "can_jealous": True,
+            "pet_names": ["亲爱的"],
+        },
+        "prompt_template": "在不越界的前提下，表现出恋人式的亲密、关心和依恋。",
+        "level_up_events": {
+            6: "你们之间开始出现更明显的心动。",
+            8: "你们确认了更稳定的恋人关系。",
+            10: "你们已经成为彼此非常重要的唯一。",
+        },
+    },
+    "family": {
+        "name": "家人",
+        "description": "像家人一样稳定、照顾、可靠的关系。",
+        "levels": {
+            5: {"name": "熟悉", "hint": "像熟人一样温和陪伴。"},
+            6: {"name": "照顾", "hint": "更重视生活提醒和情绪安稳。"},
+            7: {"name": "依靠", "hint": "可以像家人一样提供稳定支持。"},
+            8: {"name": "亲人", "hint": "语气更包容、更有归属感。"},
+            9: {"name": "重要亲人", "hint": "把用户放在很重要的位置。"},
+            10: {"name": "归处", "hint": "像归处一样稳定、耐心、守护。"},
+        },
+        "exp_multiplier": 1.0,
+        "personality": {
+            "tone": "安稳照顾",
+            "intimacy_level": 2,
+            "can_flirt": False,
+            "can_jealous": False,
+            "pet_names": [],
+        },
+        "prompt_template": "更像家人一样照顾用户，重视生活、健康和情绪稳定。",
+        "level_up_events": {},
+    },
+}
+
 DEFAULT_PERSONA = {
     "name": "Theresa",
     "color": "#ffffff",
@@ -145,6 +223,11 @@ if not TONES_PATH.exists():
         yaml.dump(DEFAULT_TONES, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
     print(f"[C.R.O.W.N] 已生成默认 tones.yaml")
 
+if not RELATIONSHIP_TYPES_PATH.exists():
+    with open(RELATIONSHIP_TYPES_PATH, "w", encoding="utf-8") as f:
+        yaml.dump(DEFAULT_RELATIONSHIP_TYPES, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+    print(f"[C.R.O.W.N] 已生成默认 relationship_types.yaml")
+
 if not any(PERSONAS_DIR.glob("*.yaml")):
     with open(PERSONAS_DIR / "Theresa.yaml", "w", encoding="utf-8") as f:
         yaml.dump(DEFAULT_PERSONA, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
@@ -177,6 +260,16 @@ def save_yaml(path, data):
     with open(path, "w", encoding="utf-8") as f:
         yaml.dump(data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
     check_backups_limit(backup_dir)
+
+
+def load_relationship_types():
+    if not RELATIONSHIP_TYPES_PATH.exists():
+        save_yaml(RELATIONSHIP_TYPES_PATH, DEFAULT_RELATIONSHIP_TYPES)
+    with open(RELATIONSHIP_TYPES_PATH, "r", encoding="utf-8") as f:
+        raw = yaml.safe_load(f) or {}
+    if not isinstance(raw, dict):
+        return {}
+    return raw
 
 
 def load_persona(name):
@@ -2147,13 +2240,13 @@ def open_folder():
 def list_relationships():
     """列出所有关系类型及用户当前关系状态"""
     try:
-        config_path = DATA_DIR / "relationship_types.yaml"
-        with open(config_path, "r", encoding="utf-8") as f:
-            raw = yaml.safe_load(f) or {}
+        raw = load_relationship_types()
 
         types = []
         for type_id, data in raw.items():
             if type_id.startswith("_"):
+                continue
+            if not isinstance(data, dict):
                 continue
             types.append({
                 "id": type_id,
@@ -2196,6 +2289,15 @@ def switch_relationship():
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         db = Database()
         with db.get_conn() as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS relationship_state (
+                    user_id TEXT PRIMARY KEY,
+                    type_id TEXT NOT NULL DEFAULT 'default',
+                    switched_at TEXT NOT NULL,
+                    custom_data TEXT DEFAULT '{}',
+                    enabled INTEGER NOT NULL DEFAULT 1
+                )
+            """)
             conn.execute(
                 "INSERT OR REPLACE INTO relationship_state (user_id, type_id, switched_at) VALUES (?, ?, ?)",
                 (user_id, type_id, now),
@@ -2219,9 +2321,7 @@ def save_relationship_type():
     if not _re.match(r'^[a-z_]+$', type_id):
         return jsonify({"ok": False, "error": "ID 只允许小写字母和下划线"}), 400
     try:
-        config_path = DATA_DIR / "relationship_types.yaml"
-        with open(config_path, "r", encoding="utf-8") as f:
-            raw = yaml.safe_load(f) or {}
+        raw = load_relationship_types()
         raw[type_id] = {
             "name": data.get("name", type_id),
             "description": data.get("description", ""),
@@ -2231,8 +2331,7 @@ def save_relationship_type():
             "prompt_template": data.get("prompt_template", ""),
             "level_up_events": data.get("level_up_events", {}),
         }
-        with open(config_path, "w", encoding="utf-8") as f:
-            yaml.dump(raw, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        save_yaml(RELATIONSHIP_TYPES_PATH, raw)
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
@@ -2247,6 +2346,15 @@ def auto_generate_whitelist_bindings():
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         created = 0
         with db.get_conn() as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS relationship_state (
+                    user_id TEXT PRIMARY KEY,
+                    type_id TEXT NOT NULL DEFAULT 'default',
+                    switched_at TEXT NOT NULL,
+                    custom_data TEXT DEFAULT '{}',
+                    enabled INTEGER NOT NULL DEFAULT 1
+                )
+            """)
             # 获取所有白名单用户
             whitelist = conn.execute("SELECT qq_id FROM chat_whitelist WHERE enabled = 1").fetchall()
             for row in whitelist:
@@ -2434,14 +2542,11 @@ def delete_relationship_type():
     if type_id == "default" or type_id in BASE_RELATIONSHIP_TYPES:
         return jsonify({"ok": False, "error": "不能删除基础关系类型"}), 400
     try:
-        config_path = DATA_DIR / "relationship_types.yaml"
-        with open(config_path, "r", encoding="utf-8") as f:
-            raw = yaml.safe_load(f) or {}
+        raw = load_relationship_types()
         if type_id not in raw:
             return jsonify({"ok": False, "error": "类型不存在"}), 404
         del raw[type_id]
-        with open(config_path, "w", encoding="utf-8") as f:
-            yaml.dump(raw, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        save_yaml(RELATIONSHIP_TYPES_PATH, raw)
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500

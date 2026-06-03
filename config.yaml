@@ -1,12 +1,12 @@
 active_audio_group: default
-default_persona: Priestess
+default_persona: Theresa
 llm:
-  api_base: https://api.openai.com/v1
-  api_key: ""
-  light_model: gpt-4o-mini
-  max_tokens: 512
-  model: gpt-4o-mini
-  temperature: 1.0
+  api_base: https://token-plan-cn.xiaomimimo.com/v1
+  api_key: YOUR_API_KEY
+  light_model: mimo-v2.5
+  max_tokens: 1024
+  model: mimo-v2.5-pro
+  temperature: 1
   timeout: 60
 modules:
   emotion:
@@ -27,19 +27,19 @@ proactive:
   quiet_hours_end: 0
   quiet_hours_start: 23
 search:
-  api_key: ""
+  api_key: YOUR_TAVILY_KEY
   max_results: 3
 tts:
-  api_base: https://api.openai.com/v1
-  api_key: ""
-  enabled: false
-  model: gpt-4o-mini-tts
-  reference_audio: ""
+  api_base: https://token-plan-cn.xiaomimimo.com/v1
+  api_key: YOUR_API_KEY
+  enabled: true
+  model: mimo-v2.5-tts-voiceclone
+  reference_audio: ''
 vlm:
-  api_base: https://api.openai.com/v1
-  api_key: ""
+  api_base: https://token-plan-cn.xiaomimimo.com/v1
+  api_key: YOUR_API_KEY
   max_tokens: 512
-  model: gpt-4o-mini
+  model: mimo-v2.5-vl
   temperature: 0.3
   timeout: 30
 active_tone_group: default
